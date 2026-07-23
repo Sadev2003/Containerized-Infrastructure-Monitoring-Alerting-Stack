@@ -1,0 +1,12 @@
+# Exclude sensitive alertmanager configuration containing tokens
+alertmanager/alertmanager.yml
+
+# Exclude storage/data directories if mounted locally
+data/
+grafana_data/
+prometheus_data/
+
+# OS/Editor junk
+.DS_Store
+*.log
+.env
