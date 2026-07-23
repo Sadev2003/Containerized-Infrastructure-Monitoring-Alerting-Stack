@@ -1,0 +1,32 @@
+groups:
+  - name: HostMonitoringAlerts
+    rules:
+      # Alert when a host or container target goes down
+      - alert: InstanceDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been unreachable for more than 30 seconds."
+
+      # Alert when CPU load/usage exceeds 85%
+      - alert: HighCpuUsage
+        expr: (100 - (avg by (instance) (irate(windows_cpu_time_total{mode="idle"}[5m])) * 100)) > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage on {{ $labels.instance }} is currently at {{ printf \"%.2f\" $value }}%."
+
+      # Alert when available physical memory drops below 10%
+      - alert: LowMemory
+        expr: (windows_memory_available_bytes / windows_memory_physical_total_bytes) * 100 < 10
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low Memory on {{ $labels.instance }}"
+          description: "Available memory on {{ $labels.instance }} is below 10% (current: {{ printf \"%.2f\" $value }}%)."

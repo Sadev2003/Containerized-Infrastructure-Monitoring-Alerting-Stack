@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# 1. Point to Alertmanager service in your Docker network
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
+
+# 2. Point to your alert rules file
+rule_files:
+  - "alert.rules.yml"
+
+# 3. Target scrapers
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "windows-node"
+    static_configs:
+      - targets: ["host.docker.internal:9182"]
+
+  - job_name: "node-exporter"
+    static_configs:
+      - targets: ["node_exporter:9100"]

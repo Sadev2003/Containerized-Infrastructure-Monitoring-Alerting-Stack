@@ -1,0 +1,29 @@
+global:
+  resolve_timeout: 5m
+
+# Default routing tree for incoming alerts
+route:
+  receiver: 'telegram'
+  group_by: ['alertname', 'instance']
+  group_wait: 5s         # Wait 5s before buffering initial alerts
+  group_interval: 10s     # Wait 10s before sending batch updates
+  repeat_interval: 12h    # Resend firing alerts every 12h if not resolved
+
+receivers:
+  - name: 'telegram'
+    telegram_configs:
+      - bot_token: '8886368545:AAGoyjYbswRqIpaY8Gkg-Wl36umtf9dMLCs'
+        chat_id: 8040871151
+        parse_mode: 'HTML'
+        send_resolved: true
+        message: |
+          {{ if eq .Status "firing" }}🚨 <b>ALERT FIRING</b> 🚨{{ else }}✅ <b>ALERT RESOLVED</b> ✅{{ end }}
+
+          {{ range .Alerts }}
+          <b>Alert:</b> {{ .Annotations.summary }}
+          <b>Severity:</b> <code>{{ .Labels.severity }}</code>
+          <b>Instance:</b> <code>{{ .Labels.instance }}</code>
+
+          <b>Details:</b>
+          {{ .Annotations.description }}
+          {{ end }}
