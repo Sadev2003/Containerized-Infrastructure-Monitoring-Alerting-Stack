@@ -12,8 +12,8 @@ route:
 receivers:
   - name: 'telegram'
     telegram_configs:
-      - bot_token: '8886368545:AAGoyjYbswRqIpaY8Gkg-Wl36umtf9dMLCs'
-        chat_id: 8040871151
+      - bot_token: 'YOUR_TELEGRAM_BOT_TOKEN_HERE'
+        chat_id: YOUR_CHAT_ID_HERE
         parse_mode: 'HTML'
         send_resolved: true
         message: |
